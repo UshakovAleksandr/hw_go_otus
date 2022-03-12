@@ -11,7 +11,7 @@ var ErrInvalidString = errors.New("invalid string")
 func ConvertStrToInt(str string) (int, error) {
 	result, err := strconv.Atoi(str)
 	if err == nil {
-		return result, err
+		return result, nil
 	}
 	return result, err
 }
@@ -53,7 +53,7 @@ func Unpack(str string) (string, error) {
 					result += tempStr
 				}
 			}
-			counter += 1
+			counter++
 		}
 	}
 	return result, nil
