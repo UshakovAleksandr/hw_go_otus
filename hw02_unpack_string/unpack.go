@@ -3,6 +3,7 @@ package hw02unpackstring
 import (
 	"errors"
 	"strconv"
+	"unicode/utf8"
 )
 
 var ErrInvalidString = errors.New("invalid string")
@@ -46,7 +47,7 @@ func Unpack(str string) (string, error) {
 		} else {
 			// проверка на число 0 и удаление записанного в результат последнего строкового значения
 			if intCheck == 0 {
-				result = result[:len(result)-1]
+				result = result[:utf8.RuneCountInString(result)-1]
 			} else {
 				// запись в результат строки по значению числа
 				for i := 0; i < intCheck-1; i++ {
