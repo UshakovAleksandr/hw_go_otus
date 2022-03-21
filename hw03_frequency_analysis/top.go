@@ -2,17 +2,15 @@ package hw03frequencyanalysis
 
 import "strings"
 
+// MaxRepeatWordsNumber - количество самых частых слов.
+const MaxRepeatWordsNumber = 10
+
 // TextPrepare - подготовка входных данных.
 func TextPrepare(text string) []string {
 	// очищение от лишних пробелов. Строка
 	stripText := strings.Join(strings.Fields(text), " ")
 	// разделение на отдельные элементы по пробелу. Слайс
 	return strings.Split(stripText, " ")
-}
-
-// CountWordInSlice - заполнение словарика.
-func CountWordInSlice(word *string, cache map[string]int) {
-	cache[*word]++
 }
 
 // FindMaxKV - поиск максимальных значений, их удаление.
@@ -53,17 +51,13 @@ func Top10(text string) []string {
 	if text == "" {
 		return nil
 	}
-	// количество самых частых слов
-	const MaxRepeatWordsNumber = 10
 	// подготовка входных данных
 	sliceOfWords := TextPrepare(text)
-	// инициализация кэша, len(sliceOfWords) указано для экономии памяти
+	// инициализация кэша
 	cache := make(map[string]int, len(sliceOfWords))
-	// заполнение кэша: подсчет количества слов
+	// заполнение кэша
 	for _, v := range sliceOfWords {
-		// для решения придирок линтера - G601: Implicit memory aliasing in for loop. (gosec)
-		v := v
-		CountWordInSlice(&v, cache)
+		cache[v]++
 	}
 	// получение финального слайса и возрат его в main(в тест, данном случае)
 	return GetTop10(cache, MaxRepeatWordsNumber)
