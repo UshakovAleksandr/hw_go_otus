@@ -49,3 +49,224 @@ func TestList(t *testing.T) {
 		require.Equal(t, []int{70, 80, 60, 40, 10, 30, 50}, elems)
 	})
 }
+
+func TestList_Len(t *testing.T) {
+	TestTable := []struct {
+		listForList []int
+		expected    int
+		testName    string
+	}{
+		{
+			listForList: []int{1, 2, 3},
+			expected:    3,
+			testName:    "test-1",
+		},
+		{
+			listForList: []int{},
+			expected:    0,
+			testName:    "test-2",
+		},
+	}
+	for _, testCase := range TestTable {
+		t.Run(testCase.testName, func(t *testing.T) {
+			list := NewList()
+			for _, v := range testCase.listForList {
+				list.PushBack(v)
+			}
+			actual := list.Len()
+			require.Equal(t, testCase.expected, actual)
+		})
+	}
+}
+
+func TestList_Front(t *testing.T) {
+	TestTable := []struct {
+		listForList []int
+		expected    *ListItem
+		testName    string
+	}{
+		{
+			listForList: []int{1, 2, 3},
+			expected:    NewListItem(1),
+			testName:    "test-1",
+		},
+		{
+			listForList: []int{1, 2, 3, 4, 5},
+			expected:    NewListItem(1),
+			testName:    "test-2",
+		},
+	}
+	for _, testCase := range TestTable {
+		t.Run(testCase.testName, func(t *testing.T) {
+			list := NewList()
+			for _, v := range testCase.listForList {
+				list.PushBack(v)
+			}
+			actual := list.Front()
+			require.Equal(t, testCase.expected.Value, actual.Value)
+		})
+	}
+}
+
+func TestList_Back(t *testing.T) {
+	TestTable := []struct {
+		listForList []int
+		expected    *ListItem
+		testName    string
+	}{
+		{
+			listForList: []int{1, 2, 3},
+			expected:    NewListItem(3),
+			testName:    "test-1",
+		},
+		{
+			listForList: []int{1, 2, 3, 4, 5},
+			expected:    NewListItem(5),
+			testName:    "test-2",
+		},
+	}
+	for _, testCase := range TestTable {
+		t.Run(testCase.testName, func(t *testing.T) {
+			list := NewList()
+			for _, v := range testCase.listForList {
+				list.PushBack(v)
+			}
+			actual := list.Back()
+			require.Equal(t, testCase.expected.Value, actual.Value)
+		})
+	}
+}
+
+func TestList_PushFront(t *testing.T) {
+	TestTable := []struct {
+		listForList []int
+		newValue    interface{}
+		expected    *ListItem
+		testName    string
+	}{
+		{
+			listForList: []int{1, 2, 3},
+			newValue:    11111,
+			expected:    NewListItem(11111),
+			testName:    "test-1",
+		},
+		{
+			listForList: []int{1, 2, 3},
+			newValue:    "aaaa",
+			expected:    NewListItem("aaaa"),
+			testName:    "test-2",
+		},
+	}
+	for _, testCase := range TestTable {
+		t.Run(testCase.testName, func(t *testing.T) {
+			list := NewList()
+			for _, v := range testCase.listForList {
+				list.PushBack(v)
+			}
+			actual := list.PushFront(testCase.newValue)
+			require.Equal(t, testCase.expected.Value, actual.Value)
+		})
+	}
+}
+
+func TestList_PushBack(t *testing.T) {
+	TestTable := []struct {
+		listForList []int
+		newValue    interface{}
+		expected    *ListItem
+		testName    string
+	}{
+		{
+			listForList: []int{1, 2, 3},
+			newValue:    11111,
+			expected:    NewListItem(11111),
+			testName:    "test-1",
+		},
+		{
+			listForList: []int{1, 2, 3},
+			newValue:    "aaaa",
+			expected:    NewListItem("aaaa"),
+			testName:    "test-2",
+		},
+	}
+	for _, testCase := range TestTable {
+		t.Run(testCase.testName, func(t *testing.T) {
+			list := NewList()
+			for _, v := range testCase.listForList {
+				list.PushBack(v)
+			}
+			actual := list.PushBack(testCase.newValue)
+			require.Equal(t, testCase.expected.Value, actual.Value)
+		})
+	}
+}
+
+// вопрос ниже
+//func TestList_Remove(t *testing.T) {
+//	TestTable := []struct {
+//		listForList []int
+//		nodeToRemove *ListItem
+//		expected    []int
+//		testName    string
+//	}{
+//		{
+//			listForList: []int{1, 2, 3, 4},
+//			nodeToRemove:  NewListItem(1),
+//			expected:    []int{2, 3, 4},
+//			testName:    "test-1",
+//		},
+//	}
+//	for _, testCase := range TestTable {
+//		t.Run(testCase.testName, func(t *testing.T) {
+//			list := NewList()
+//			for _, v := range testCase.listForList {
+//				list.PushBack(v)
+//			}
+//			list.Remove(testCase.nodeToRemove)
+//			var resultList []interface{}
+//			for i := 2; i < 5; i++ {
+//				resultList = append(resultList, list.Front().Value)
+//				nodeToDelete := NewListItem(i)
+//				// при удалении последнего элемента попадаю на nil и паника
+//				// не могу понять, как этого избежать, наверное сам Remove не корректно написан
+//				list.Remove(nodeToDelete)
+//			}
+//			fmt.Println(resultList)
+//
+//			//require.Equal(t, testCase.expected.Value, actual.Value)
+//		})
+//	}
+//}
+
+func TestList_MoveToFront(t *testing.T) {
+	TestTable := []struct {
+		listForList []int
+		newNode     *ListItem
+		expected    int
+		testName    string
+	}{
+		{
+			listForList: []int{1, 2, 3},
+			newNode:     NewListItem(3),
+			expected:    3,
+			testName:    "test-1",
+		},
+		{
+			listForList: []int{1, 2, 3},
+			newNode:     NewListItem(2),
+			expected:    2,
+			testName:    "test-2",
+		},
+	}
+	for _, testCase := range TestTable {
+		t.Run(testCase.testName, func(t *testing.T) {
+			list := NewList()
+			for _, v := range testCase.listForList {
+				list.PushBack(v)
+			}
+			list.MoveToFront(testCase.newNode)
+			actual := list.Front()
+			require.Equal(t, testCase.expected, actual.Value)
+		})
+	}
+}
