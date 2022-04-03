@@ -80,3 +80,102 @@ func TestTop10(t *testing.T) {
 		}
 	})
 }
+
+func TestTextPrepare(t *testing.T) {
+	TestTable := []struct {
+		text     string
+		expected []string
+		testName string
+	}{
+		{
+			text:     "текст1 текст2    текст3",
+			expected: []string{"текст1", "текст2", "текст3"},
+			testName: "string with spaces only",
+		},
+		{
+			text: `текст1 текст2    текст3
+					текст4                    `,
+			expected: []string{"текст1", "текст2", "текст3", "текст4"},
+			testName: "string with spaces and \\n\\ in \\``\\ brackets",
+		},
+	}
+	for _, testCase := range TestTable {
+		t.Run(testCase.testName, func(t *testing.T) {
+			actual := TextPrepare(testCase.text)
+			require.Equal(t, testCase.expected, actual)
+		})
+	}
+}
+
+func TestFindMaxKV(t *testing.T) {
+	TestTable := []struct {
+		mapIn    map[string]int
+		expected string
+		testName string
+	}{
+		{
+			mapIn: map[string]int{
+				"a": 1,
+				"b": 2,
+			},
+			expected: "b",
+			testName: "test 1",
+		},
+		{
+			mapIn: map[string]int{
+				"a": 1,
+				"b": 2,
+				"c": 3,
+				"d": 3,
+				"e": 3,
+			},
+			expected: "c",
+			testName: "test 2_sorting",
+		},
+	}
+	for _, testCase := range TestTable {
+		t.Run(testCase.testName, func(t *testing.T) {
+			actual := FindMaxKV(testCase.mapIn)
+			require.Equal(t, testCase.expected, actual)
+		})
+	}
+}
+
+func TestGetTop10(t *testing.T) {
+	TestTable := []struct {
+		mapIn               map[string]int
+		maxNumberOfElements int
+		expected            []string
+		testName            string
+	}{
+		{
+			mapIn: map[string]int{
+				"a": 1,
+				"b": 2,
+			},
+			maxNumberOfElements: 2,
+			expected:            []string{"b", "a"},
+			testName:            "test 1",
+		},
+		{
+			mapIn: map[string]int{
+				"a": 1,
+				"b": 2,
+				"c": 3,
+				"d": 3,
+				"e": 3,
+				"f": 4,
+				"g": 10,
+			},
+			maxNumberOfElements: 3,
+			expected:            []string{"g", "f", "c"},
+			testName:            "test 2_sorting",
+		},
+	}
+	for _, testCase := range TestTable {
+		t.Run(testCase.testName, func(t *testing.T) {
+			actual := GetTop10(testCase.mapIn, testCase.maxNumberOfElements)
+			require.Equal(t, testCase.expected, actual)
+		})
+	}
+}
