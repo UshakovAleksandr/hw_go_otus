@@ -62,7 +62,6 @@ func Run(tasks []Task, n, m int) error {
 	maxErrorsCount := m
 	var counter int
 
-	wg.Wait()
 	// вычитываем из chErr без дедлока, тк выше wg.Wait() запущена в горутине
 	for i := range chErr {
 		fmt.Println(i)
