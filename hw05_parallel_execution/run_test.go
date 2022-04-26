@@ -12,6 +12,7 @@ import (
 	"go.uber.org/goleak"
 )
 
+// вот тут не понял как решить.
 func TestRun(t *testing.T) {
 	defer goleak.VerifyNone(t)
 
@@ -66,5 +67,31 @@ func TestRun(t *testing.T) {
 
 		require.Equal(t, runTasksCount, int32(tasksCount), "not all tasks were completed")
 		require.LessOrEqual(t, int64(elapsedTime), int64(sumTime/2), "tasks were run sequentially?")
+	})
+
+	t.Run("err rand", func(t *testing.T) {
+		tasksCount := 10
+		tasks := make([]Task, 0, tasksCount)
+
+		var runTasksCount int32
+
+		for i := 0; i < tasksCount; i++ {
+			tasks = append(tasks, func() error {
+				rand.Seed(time.Now().UnixNano())
+				a := rand.Intn(2-0) + 0
+				atomic.AddInt32(&runTasksCount, 1)
+				if a == 0 {
+					return fmt.Errorf("%v", "ошибка")
+				}
+				return nil
+			})
+		}
+		workersCount := 4
+		maxErrorsCount := 3
+
+		err := Run(tasks, workersCount, maxErrorsCount)
+
+		require.Equal(t, err, ErrErrorsLimitExceeded)
+		require.Truef(t, errors.Is(err, ErrErrorsLimitExceeded), "actual err - %v", err)
 	})
 }
