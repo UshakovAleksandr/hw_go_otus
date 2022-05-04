@@ -26,7 +26,6 @@ func ExecutePipeline(in In, done In, stages ...Stage) Out {
 	for i := range in {
 		select {
 		case <- done:
-			close(out)
 			return out
 		default:
 			wg.Add(1)
